@@ -2,5 +2,26 @@
 name = "dbg_breakpoint"
 version = "0.1.0"
 edition = "2021"
+authors = ["kromych <kromych@users.noreply.github.com>"]
+description = """
+Set breakpoints with the `breakpoint!()` macro on many target architectures
+and popular OSes like FreeBSD, macOS, iOS, Linux distro's, Windows. Break into
+the debugger with an easy `breakpoint_if_debugging()` call!
+"""
+documentation = "https://github.com/kromych/dbg_breakpoint"
+homepage = "https://github.com/kromych/dbg_breakpoint"
+repository = "https://github.com/kromych/dbg_breakpoint"
+keywords = ["aarch64", "x64_64", "breakpoint", "reverse-engineering", "debugging"]
+categories = ["command-line-utilities", "development-tools", "debugging", "diagnostics"]
+license = "Unlicense OR MIT"
+readme = "Readme.md"
+
+[lib]
+path = "src/lib/lib.rs"
+
+[[bin]]
+name = "runme"
+path = "src/bin/runme.rs"
 
 [dependencies]
+libc = "0.2"

@@ -1,4 +1,5 @@
-//! Debugging aids.
+//! Debugging aids on Windows employing SEH to detect the debugger if it is
+//! hiding its presence TEB manipulation.
 //!
 //! On Windows, the approach is based on the Structured Exception Handling:
 //! https://learn.microsoft.com/en-us/windows/win32/debug/structured-exception-handling
@@ -15,18 +16,19 @@
 //! The implementation is available for the `x86_64` and the `aarch64`
 //! targets under Windows.
 
-#[cfg(target_os = "windows")]
-mod windows {
-    #[cfg(not(target_arch = "x86"))]
-    extern "C" {
-        /// Breakpoint that is passed to the debugger as the first chance exception
-        /// if the debugger is attached, and is skipped over otherwise.
-        pub(super) fn __dbg_breakpoint();
-    }
+#![cfg(target_os = "windows")]
 
-    #[cfg(target_arch = "x86_64")]
-    core::arch::global_asm!(
-        r#"
+#[cfg(not(target_arch = "x86"))]
+extern "C" {
+    /// Breakpoint that is passed to the debugger as the first chance exception
+    /// if the debugger is attached, and is skipped over otherwise.
+    /// Returns `0` if no debugger was sensed, and `-1` if it was.
+    pub(super) fn __dbg_breakpoint() -> i32;
+}
+
+#[cfg(target_arch = "x86_64")]
+core::arch::global_asm!(
+    r#"
         .pushsection    .text
 
         .globl          __dbg_breakpoint_flt
@@ -45,9 +47,11 @@ mod windows {
         .seh_endprologue
     1:
         int3
+        mov             eax, -1
     2:
     3:
         add             rsp, 64
+        xor             eax, eax
         ret
     4:
         jmp             3b
@@ -62,11 +66,11 @@ mod windows {
         .seh_endproc
         .popsection
     "#
-    );
+);
 
-    #[cfg(target_arch = "aarch64")]
-    core::arch::global_asm!(
-        r#"
+#[cfg(target_arch = "aarch64")]
+core::arch::global_asm!(
+    r#"
         .pushsection    .text
 
         .globl          __dbg_breakpoint_flt
@@ -85,12 +89,14 @@ mod windows {
         .seh_endprologue
     1:
         brk             #0xf000
+        mov             w0, -1
     2:
     3:
         .seh_startepilogue
         ldr             lr, [sp], #16
         .seh_save_reg_x lr, 16
         .seh_endepilogue
+        mov             w0, wzr
         ret
     4:
         b               3b
@@ -105,25 +111,14 @@ mod windows {
         .seh_endproc
         .popsection
     "#
-    );
+);
 
-    #[cfg(target_arch = "x86")]
-    pub(super) fn __dbg_breakpoint() {
-        // Not implemented
-    }
-}
-
-/// Breakpoint that is passed to the debugger as the first chance exception
-/// if the debugger is attached, and is skipped over otherwise.
-#[cfg(target_os = "windows")]
-pub fn dbg_breakpoint() {
+#[cfg(not(target_arch = "x86"))]
+pub fn breakpoint_if_debugging_seh() -> Option<DebuggerPresence> {
     // SAFETY: the call does not access any state shared between threads.
-    unsafe {
-        windows::__dbg_breakpoint();
+    match unsafe { windows::__dbg_breakpoint() } {
+        0 => DebuggerPresence::NotDetected,
+        -1 => DebuggerPresence::Detected,
+        _ => panic!("Internal error"),
     }
-}
-
-#[cfg(not(target_os = "windows"))]
-pub fn dbg_breakpoint() {
-    // Not implemented
 }
