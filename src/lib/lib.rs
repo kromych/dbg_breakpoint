@@ -9,29 +9,20 @@ macro_rules! breakpoint {
         // SAFETY: Executing the breakpoint instruction. No state is shared
         // or modified by this code.
         unsafe {
-            #[cfg(target_arch = "x86_64")]
-            core::arch::asm!("int3");
-
-            #[cfg(target_arch = "x86")]
+            #[cfg(any(target_arch = "x86_64", target_arch = "x86"))]
             core::arch::asm!("int3");
 
             #[cfg(target_arch = "aarch64")]
             core::arch::asm!("brk #0xf000");
 
             #[cfg(target_arch = "arm")]
-            core::arch::asm!("bkpt #0xf000");
+            core::arch::asm!("udf #254");
 
-            #[cfg(target_arch = "riscv32")]
-            core::arch::asm!(".4byte 0x00100073"); // ECALL
+            #[cfg(any(target_arch = "riscv32", target_arch = "riscv64"))]
+            core::arch::asm!("ebreak");
 
-            #[cfg(target_arch = "riscv64")]
-            core::arch::asm!(".4byte 0x00100073"); // ECALL
-
-            #[cfg(target_arch = "powerpc")]
-            core::arch::asm!("tw 31,0,0");
-
-            #[cfg(target_arch = "powerpc64")]
-            core::arch::asm!("tw 31,0,0");
+            #[cfg(any(target_arch = "powerpc", target_arch = "powerpc64"))]
+            core::arch::asm!("trap");
         }
 
         #[cfg(not(any(

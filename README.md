@@ -13,6 +13,9 @@ Well, sure, but why?
   give them a name that is easily-discovered/human-friendly,
 * Can add this to your `#[panic_handler]` to break into the debugger on a panic.
 
+This model might be reminiscent of "semihosting" where the execution environment
+includes a host or a debugger who's services might be requested by the program.
+
 Here is the example of how one can make use of this: [`runme.rs`](src/bin/runme.rs).
 Do exercise *extreme* caution when using any of this in the production environment, i.e.
 out of the inner development loop. Heisenbugs and crashes might be sighted.
@@ -53,5 +56,6 @@ Here, we're talking the user mode yet the above illustrates the point
 that the value supplied after `brk` influences what to expect.
 
 For `__builtin_trap()`, `gcc` produces `brk #0x3e8`, `clang` generates `brk #1`.
-This library uses `0xf000` as the debuggers skip over the debug trap automatically
-in this case.
+This library uses `0xf000` as the debuggers on Windows and macOS skip over the debug
+trap automatically in this case by advancing the instruction pointer behind the
+curtain.
