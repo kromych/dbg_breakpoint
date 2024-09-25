@@ -1,5 +1,9 @@
 # Breakpoints when the debugger is attached
 
+Set breakpoints with the `breakpoint!()` macro on many target architectures
+and popular OSes like FreeBSD, macOS, iOS, Linux distro's, Windows. Break into
+the debugger with an easy `breakpoint_if_debugging()` call!
+
 Well, sure, but why?
 
 * It might be more convinient to add the call to `breakpoint_if_debugging` from inside
@@ -47,7 +51,7 @@ at the time of writing:
 
 Here, we're talking the user mode yet the above illustrates the point
 that the value supplied after `brk` influences what to expect.
- 
+
 For `__builtin_trap()`, `gcc` produces `brk #0x3e8`, `clang` generates `brk #1`.
 This library uses `0xf000` as the debuggers skip over the debug trap automatically
 in this case.
