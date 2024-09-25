@@ -15,6 +15,14 @@
 //!
 //! The implementation is available for the `x86_64` and the `aarch64`
 //! targets under Windows.
+//!
+//! To learn more about SEH attributes empirically, can compile C files to
+//! assembly with `clang` or `cl`. As for the documentation, here are some
+//! links:
+//!
+//! * https://doc.rust-lang.org/reference/inline-assembly.html#structured-exception-handling
+//! * https://learn.microsoft.com/en-us/cpp/build/arm64-exception-handling?view=msvc-170
+//! * https://learn.microsoft.com/en-us/cpp/build/exception-handling-x64?view=msvc-170
 
 #![cfg(target_os = "windows")]
 

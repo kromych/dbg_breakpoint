@@ -59,3 +59,7 @@ For `__builtin_trap()`, `gcc` produces `brk #0x3e8`, `clang` generates `brk #1`.
 This library uses `0xf000` as the debuggers on Windows and macOS skip over the debug
 trap automatically in this case by advancing the instruction pointer behind the
 curtain.
+
+## See also
+
+* C++'s ["Debugging Support"](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2546r0.html) paper.
