@@ -18,12 +18,14 @@
 
 #![cfg(target_os = "windows")]
 
+use crate::DebuggerPresence;
+
 #[cfg(not(target_arch = "x86"))]
 extern "C" {
     /// Breakpoint that is passed to the debugger as the first chance exception
     /// if the debugger is attached, and is skipped over otherwise.
     /// Returns `0` if no debugger was sensed, and `-1` if it was.
-    pub(super) fn __dbg_breakpoint() -> i32;
+    fn __dbg_breakpoint() -> i32;
 }
 
 #[cfg(target_arch = "x86_64")]
@@ -51,9 +53,9 @@ core::arch::global_asm!(
     2:
     3:
         add             rsp, 64
-        xor             eax, eax
         ret
     4:
+        xor             eax, eax
         jmp             3b
         .seh_handler    __C_specific_handler, @except
         .seh_handlerdata
@@ -76,7 +78,7 @@ core::arch::global_asm!(
         .globl          __dbg_breakpoint_flt
         .p2align        2
     __dbg_breakpoint_flt:
-        mov             w0, 1     // EXCEPTION_EXECUTE_HANDLER
+        mov             w0, #1     // EXCEPTION_EXECUTE_HANDLER
         ret
 
         .globl          __dbg_breakpoint
@@ -89,16 +91,16 @@ core::arch::global_asm!(
         .seh_endprologue
     1:
         brk             #0xf000
-        mov             w0, -1
+        mov             w0, #-1
     2:
     3:
         .seh_startepilogue
         ldr             lr, [sp], #16
         .seh_save_reg_x lr, 16
         .seh_endepilogue
-        mov             w0, wzr
         ret
     4:
+        mov             w0, wzr
         b               3b
         .seh_handler    __C_specific_handler, @except
         .seh_handlerdata
@@ -116,9 +118,9 @@ core::arch::global_asm!(
 #[cfg(not(target_arch = "x86"))]
 pub fn breakpoint_if_debugging_seh() -> Option<DebuggerPresence> {
     // SAFETY: the call does not access any state shared between threads.
-    match unsafe { windows::__dbg_breakpoint() } {
-        0 => DebuggerPresence::NotDetected,
-        -1 => DebuggerPresence::Detected,
+    match unsafe { __dbg_breakpoint() } {
+        0 => Some(DebuggerPresence::NotDetected),
+        -1 => Some(DebuggerPresence::Detected),
         _ => panic!("Internal error"),
     }
 }
