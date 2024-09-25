@@ -1,8 +1,9 @@
 # Breakpoints when the debugger is attached
 
 Set breakpoints with the `breakpoint!()` macro on many target architectures
-and popular OSes like FreeBSD, macOS, iOS, Linux distro's, Windows. Break into
-the debugger with an easy `breakpoint_if_debugging()` call!
+and popular OSes like FreeBSD, macOS, iOS, Linux distro's, Windows without
+using the nightly toolchain. Break into the debugger with an easy
+`breakpoint_if_debugging()` call, too!
 
 Well, sure, but why?
 

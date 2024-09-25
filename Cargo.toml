@@ -15,7 +15,7 @@ repository = "https://github.com/kromych/dbg_breakpoint"
 keywords = ["aarch64", "x64_64", "breakpoint", "reverse-engineering", "debugging"]
 categories = ["command-line-utilities", "development-tools", "debugging", "diagnostics"]
 license = "Unlicense OR MIT"
-readme = "Readme.md"
+readme = "README.md"
 
 [lib]
 path = "src/lib/lib.rs"
