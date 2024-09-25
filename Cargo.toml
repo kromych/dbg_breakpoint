@@ -12,8 +12,8 @@ using the nightly toolchain. Break into the debugger with an easy
 documentation = "https://github.com/kromych/dbg_breakpoint"
 homepage = "https://github.com/kromych/dbg_breakpoint"
 repository = "https://github.com/kromych/dbg_breakpoint"
-keywords = ["aarch64", "x64_64", "breakpoint", "reverse-engineering", "debugging"]
-categories = ["command-line-utilities", "development-tools", "debugging", "diagnostics"]
+keywords = ["breakpoint", "reverse-engineering", "debugging", "diagnostics"]
+categories = ["command-line-utilities", "development-tools"]
 license = "Unlicense OR MIT"
 readme = "README.md"
 
