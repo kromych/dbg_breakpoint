@@ -5,8 +5,9 @@ edition = "2021"
 authors = ["kromych <kromych@users.noreply.github.com>"]
 description = """
 Set breakpoints with the `breakpoint!()` macro on many target architectures
-and popular OSes like FreeBSD, macOS, iOS, Linux distro's, Windows. Break into
-the debugger with an easy `breakpoint_if_debugging()` call!
+and popular OSes like FreeBSD, macOS, iOS, Linux distro's, Windows without
+using the nightly toolchain. Break into the debugger with an easy
+`breakpoint_if_debugging()` call, too!
 """
 documentation = "https://github.com/kromych/dbg_breakpoint"
 homepage = "https://github.com/kromych/dbg_breakpoint"
