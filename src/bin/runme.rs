@@ -11,6 +11,6 @@ fn main() {
         println!("Windows 64-bit SEH: is debugger present: {is_debugger_present:?}");
     }
 
-    println!("Now the process will crash if the debugger is not attcahed");
+    println!("Now the process will crash if the debugger is not attached");
     breakpoint!();
 }
