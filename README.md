@@ -64,3 +64,12 @@ curtain.
 ## See also
 
 * C++'s ["Debugging Support"](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2546r0.html) paper.
+
+## License
+
+dbg_breakpoint is free and open source. All code in this repository is dual-licensed under either:
+
+- Unlicense ([LICENSE-UNLICENSE](/LICENSE-UNLICENSE) or <https://unlicense.org/>)
+- MIT License ([LICENSE-MIT](/LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
+
+at your option.
